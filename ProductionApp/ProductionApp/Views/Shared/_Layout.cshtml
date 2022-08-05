@@ -1,0 +1,147 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewData["Title"] | E-Statements</title>
+
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome Icons -->
+    <link href="~/css/all.min.css" rel="stylesheet" />
+    <!-- overlayScrollbars -->
+    <link href="~/css/OverlayScrollbars.min.css" rel="stylesheet" />
+    <!-- Theme style -->
+    <link href="~/css/adminlte.min.css" rel="stylesheet" />
+    <link href="~/css/hover.css" rel="stylesheet" />
+    <link href="~/lib/jqueryDataTable/css/css/jquery.dataTables.css" rel="stylesheet" />
+    <link href="~/lib/jqueryui/jquery-ui.css" rel="stylesheet" />
+    <link href="~/css/waitMe.min.css" rel="stylesheet" />
+</head>
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
+    <div class="wrapper">
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light" style="background-color: #0A6FB7;color:white">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                </li>
+            </ul>
+            @{ 
+                string currentArea = (string)ViewData["Navigation"];
+            }
+            <span>@currentArea</span>
+        </nav>
+
+
+        <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-color: #0A6FB7">
+            <a href="@Url.Action("Index","Home",new {area="Dashboard"} )" class="brand-link">
+                <span class="brand-text font-weight-light">App Name</span>
+            </a>
+            <div class="sidebar">
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="image">
+                        @*<img src="img/logo.png" class="img-circle elevation-2" alt="User Image">*@
+                    </div>
+                    <div class="info">
+                        <a href="#" class="d-block">User</a>
+                    </div>
+                </div>
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                        <li class="nav-item">
+                            
+                            <a href="@Url.Action("Index","Home")" class="nav-link">
+                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <p>
+                                    Dashboard
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            
+                            <a href="@Url.Action("Index","Ingredients" )" class="nav-link">
+                                @*<i class="nav-icon fas fa-users"></i>*@
+                                <i class="nav-icon fa-users"></i>
+                                <p>
+                                    Ingredients
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            
+                            <a href="@Url.Action("Index","Products" )" class="nav-link">
+                                @*<i class="nav-icon fas fa-users"></i>*@
+                                <i class="nav-icon fa-users"></i>
+                                <p>
+                                    Products
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            
+                            <a href="@Url.Action("Index","Orders" )" class="nav-link">
+                                @*<i class="nav-icon fas fa-users"></i>*@
+                                <i class="nav-icon fa-users"></i>
+                                <p>
+                                    Orders
+                                </p>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+
+        <div class="content-wrapper">
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                        </div>
+                        <div class="col-sm-6">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <section class="content">
+                <div class="container-fluid">
+                    @RenderBody()
+
+                </div>
+            </section>
+        </div>
+        <aside class="control-sidebar control-sidebar-dark">
+        </aside>
+        <footer class="main-footer text-center">
+            <strong>Copyright &copy; @DateTime.Now.Year <a href="https://www.data-edge.com">data edge ltd</a>.</strong>
+        </footer>
+    </div>
+    <!-- ./wrapper -->
+    <!-- REQUIRED SCRIPTS -->
+    <!-- jQuery -->
+    <script src="~/js/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="~/js/bootstrap.bundle.min.js"></script>
+    <!-- overlayScrollbars -->
+    <script src="~/js/jquery.overlayScrollbars.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/js/adminlte.js"></script>
+
+    <script src="~/lib/jqueryDataTable/js/jquery.dataTables.js"></script>
+    <script src="~/lib/jqueryui/jquery-ui.js"></script>
+
+    <!-- PAGE PLUGINS -->
+    <!-- jQuery Mapael -->
+    <script src="~/js/jquery.mousewheel.js"></script>
+    <script src="~/js/raphael.min.js"></script>
+    <script src="~/js/jquery.mapael.min.js"></script>
+    <!-- ChartJS -->
+    <script src="~/js/Chart.min.js"></script>
+    <script src="~/js/waitMe.min.js"></script>
+    <script src="~/js/dashboard2.js"></script>
+    <script src="~/js/sweetalert.js"></script>
+    <script src="~/js/moment.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
