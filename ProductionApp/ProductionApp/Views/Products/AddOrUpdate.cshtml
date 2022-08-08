@@ -1,73 +1,142 @@
-﻿@{
+﻿@model ProductionApp.ViewModels.ProductEntryVM
+
+@{
     ViewData["Title"] = "AddOrUpdate";
 }
 
-<div class="row" id="tblLoader">
-    <div class="col-md-12 card card-primary">
-        <div class="card-header">
-            <div class="row">
-                <div class="col-md-12">
-                    <h4>New Product</h4>
-                </div>
-            </div>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="col-md-4 offset-md-4 card" style="background-color:#ededed">
-                        <label for="txtName">Product Name</label>
-                        <input type="text" class="form-control" id="txtName" placeholder="Product Name">
-                        <br />
+@using (Html.BeginForm())
+{
+    <div class="row" id="tblLoader">
+        <div class="col-md-12 card card-primary">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4>New Product</h4>
                     </div>
                 </div>
             </div>
-
-            <br />
-
-
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="col-md-4 offset-md-4 card" style="background-color:#ededed">
-                        <div class="card-header">
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control" placeholder="Ingredient Name" id="txtIngredient" >
-                                <div class="input-group-append">
-                                    <button class="btn btn-success" type="button">Add</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <table id="tblIngredientList" class="table table-bordered table-hover">
-                                <thead>
-                                    <tr>
-                                        <th width="10%">SL#</th>
-                                        <th width="80%">Name</th>
-                                        <th width="10%">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-4 offset-md-4 card" style="background-color:#ededed">
+                            <label for="txtName">Product Name</label>
+                            @Html.TextBoxFor(model=>model.Product.Name,"",new {@class="form-control",id="txtName",placeholder="Product Name"})
+                            @*<input type="text" class="form-control" id="txtName" placeholder="Product Name">*@
                             <br />
                         </div>
                     </div>
                 </div>
 
+                <br />
+
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-4 offset-md-4 card" style="background-color:#ededed">
+                            <div class="card-header">
+                                <div class="input-group mb-3">
+                                    <input type="hidden" id="hdnIngredientId" />
+                                    <input type="text" class="form-control" placeholder="Ingredient Name" id="txtIngredient">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-success" type="button" onclick="AddIngredientInList()">Add</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <table id="tblIngredientList" class="table table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th width="10%">SL#</th>
+                                            <th width="80%">Name</th>
+                                            <th width="10%">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                                <br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <br />
+
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-4 offset-md-4 card" style="background-color:#ededed">
+                            <div class="card-body text-center">
+                                <button type="submit" class="btn btn-success">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+
+
+
     </div>
+}
 
 
 
-</div>
 @section scripts{
     <script>
 
         $(document).ready(function() {
 
-
+            IngredientAutocomplet();
         });
 
+        function AddIngredientInList() {
+            var sl = $('#tblIngredientList tbody tr').length;
+            var id = $('#hdnIngredientId').val();
+            var name = $('#txtIngredient').val();
+            console.log(sl);
+            var row = `<tr>
+                           <td width="10%">
+                               ${sl+1}
+                           </td>
+                           <td width="80%">
+                               <input data-val="true" data-val-required="The Id field is required."  name="Ingredients[${sl}].Id" type="hidden" value="${id}">
+                               <label>${name}</label>
+                           </td>
+                           <td width="10%">Action</td>
+                       </tr>`;
+            $('#tblIngredientList tbody').append(row);
+
+            $('#hdnIngredientId').val('');
+            $('#txtIngredient').val('');
+        }
+
+        function IngredientAutocomplet() {
+
+            $('#txtIngredient').autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        type: "GET",
+                        url: "/Ingredients/GetIngredientsByName",
+                        data: { name: this.term },
+                        success: function(data) {
+                            response(data);
+                        }
+                    });
+                },
+                change: function(event, ui) {
+                    if (!ui.item) {
+                        $('#txtIngredient').val('');
+                    }
+                },
+                select: function(e, ui) {
+                    $('#hdnIngredientId').val(ui.item.id);
+                }
+            }).focus(function() {
+                $(this).autocomplete('search', ' ');
+            });
+        }
 
 
 

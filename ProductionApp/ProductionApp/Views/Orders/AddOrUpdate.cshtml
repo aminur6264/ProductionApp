@@ -1,0 +1,120 @@
+﻿
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="row" id="tblLoader">
+    <div class="col-md-12 card card-primary">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-md-12">
+                    <h4>New Order</h4>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-4 offset-md-4 card" style="background-color:#ededed">
+                        <label for="txtProductName">Product Name</label>
+                        <input type="hidden" id="hdnProductId">
+                        <input type="text" class="form-control" id="txtProductName" placeholder="Product Name">
+                        <br />
+                    </div>
+                </div>
+            </div>
+
+            <br />
+
+
+            <div class="row">
+                <div class="col-md-12 card" style="background-color:#ededed">
+                    <div class="card-body">
+                        <table class="table"></table>
+                    </div>
+                </div>
+            </div>
+
+            <br />
+
+            <div class="row">
+                <div class="col-md-12 card" style="background-color:#ededed">
+                    <div class="card-body"></div>
+                </div>
+            </div>
+
+            <br />
+
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-4 offset-md-4 card" style="background-color:#ededed">
+                        <div class="card-body text-center">
+                            <button type="submit" class="btn btn-success">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+
+        $(document).ready(function() {
+            ProductAutocomplet();
+
+        });
+
+
+        function ProductAutocomplet() {
+
+            $('#txtProductName').autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        type: "GET",
+                        url: "/Products/GetProductsByName",
+                        data: { name: this.term },
+                        success: function(data) {
+                            response(data);
+                        }
+                    });
+                },
+                change: function(event, ui) {
+                    if (!ui.item) {
+                        $('#txtProductName').val('');
+                        $('#hdnProductId').val('');
+                    }
+                },
+                select: function(e, ui) {
+                    $('#hdnProductId').val(ui.item.id);
+                }
+            }).focus(function() {
+                $(this).autocomplete('search', ' ');
+            });
+        }
+
+
+        function WaitForMe(div, message) {
+            $(div).waitMe({
+                effect: 'win8',
+                text: message,
+                bg: 'rgba(255,255,255,0.7)',
+                color: '#000000',
+                maxSize: 30,
+                waitTime: -1,
+                textPos: 'vertical',
+                fontSize: '',
+                source: '',
+                onClose: function() { }
+            })
+        }
+        function hideWaitForMe(div) {
+            $(div).waitMe("hide");
+        }
+    </script>
+}
+
