@@ -1,6 +1,4 @@
-﻿
-
-@{
+﻿@{
     ViewData["Title"] = "Index";
 }
 
@@ -16,11 +14,14 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="col-md-4 offset-md-4 card" style="background-color:#ededed">
-                        <label for="txtProductName">Product Name</label>
-                        <input type="hidden" id="hdnProductId">
-                        <input type="text" class="form-control" id="txtProductName" placeholder="Product Name">
-                        <br />
+                    <div class="col-md-4 offset-md-4 card" style="background-color:#ededed;padding:10px">
+                        <div class="input-group mb-3">
+                            <input type="hidden" id="hdnProductId" />
+                            <input type="text" class="form-control" id="txtProductName" placeholder="Product Name">
+                            <div class="input-group-append">
+                                <button class="btn btn-success" id="btnAddProductInList" type="button" >Add</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -31,7 +32,19 @@
             <div class="row">
                 <div class="col-md-12 card" style="background-color:#ededed">
                     <div class="card-body">
-                        <table class="table"></table>
+                        <table id="tblProductList" class="table">
+                            <thead>
+                                <tr>
+                                    <th>Sl</th>
+                                    <th>Product Id</th>
+                                    <th>Product Name</th>
+                                    <th>Total Ingredient</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -65,9 +78,59 @@
     <script>
 
         $(document).ready(function() {
-            ProductAutocomplet();
+            var data = [
+                [
+                    "Tiger Nixon",
+                    "System Architect",
+                    "Edinburgh",
+                    "5421"
+                ],
+                [
+                    "Garrett Winters",
+                    "Director",
+                    "Edinburgh",
+                    "8422"
+                ]
+            ]
+            var dtProductList = [
+                //{ 'sl': 1, 'productId':1, 'productName':'Mouse','total':500 },
+                //{ 'sl': 2, 'productId':1, 'productName':'Mouse','total':500 },
+                //{ 'sl': 3, 'productId':1, 'productName':'Mouse','total':500 },
+                //{ 'sl': 4, 'productId':1, 'productName':'Mouse','total':500 },
+                //{ 'sl': 5, 'productId':1, 'productName':'Mouse','total':500 },
+                //{ 'sl': 6, 'productId':1, 'productName':'Mouse','total':500 }
+            ];
 
+            ProductAutocomplet();
+            var tblProductList = $('#tblProductList').dataTable({
+                data: dtProductList,
+                columns: [
+                    { 'data': 'sl' },
+                    { 'data': 'productid' },
+                    { 'data': 'productName' },
+                    { 'data': 'total' },
+                    {
+                        data: 'sl',
+                        render: function(data, type, row) {
+                            return '<a href="Accounts/Home/Details/' + row.sl + '" target="_blank">' + row.sl + '</a>';
+                        },
+                    }
+                ]
+            });
+
+            $('#btnAddProductInList').click(() => { 
+                var sl = dtProductList.length;
+                var productId = $('#hdnProductId').val();
+                var productName = $('#txtProductName').val();
+                var newProduct = { 'sl': sl + 1, 'productId': productId, 'productName': productName, 'total': 0 };
+                dtProductList.push(newProduct);
+                $('#hdnProductId').val('');
+                $('#txtProductName').val('');
+
+                tblProductList.ajax.reload();
+            });
         });
+
 
 
         function ProductAutocomplet() {
