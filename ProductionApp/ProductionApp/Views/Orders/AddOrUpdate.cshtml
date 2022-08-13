@@ -19,7 +19,7 @@
                             <input type="hidden" id="hdnProductId" />
                             <input type="text" class="form-control" id="txtProductName" placeholder="Product Name">
                             <div class="input-group-append">
-                                <button class="btn btn-success" id="btnAddProductInList" type="button" >Add</button>
+                                <button class="btn btn-success" id="btnAddProductInList" type="button">Add</button>
                             </div>
                         </div>
                     </div>
@@ -53,7 +53,23 @@
 
             <div class="row">
                 <div class="col-md-12 card" style="background-color:#ededed">
-                    <div class="card-body"></div>
+                    <div class="card-body">
+                        <table id="tblIngredientList" class="table">
+                            <thead>
+                                <tr>
+                                    <th>Sl</th>
+                                    <th>Product Id</th>
+                                    <th>Product Name</th>
+                                    <th>Ingredient Id</th>
+                                    <th>Ingredient Name</th>
+                                    <th>Total Ingredient</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -75,50 +91,49 @@
 
 
 @section scripts{
+    <script src="https://editor.datatables.net/extensions/Editor/js/dataTables.editor.min.js"></script>
     <script>
-
+        //https://editor.datatables.net/examples/inline-editing/simple
         $(document).ready(function() {
-            var data = [
-                [
-                    "Tiger Nixon",
-                    "System Architect",
-                    "Edinburgh",
-                    "5421"
-                ],
-                [
-                    "Garrett Winters",
-                    "Director",
-                    "Edinburgh",
-                    "8422"
-                ]
-            ]
-            var dtProductList = [
-                //{ 'sl': 1, 'productId':1, 'productName':'Mouse','total':500 },
-                //{ 'sl': 2, 'productId':1, 'productName':'Mouse','total':500 },
-                //{ 'sl': 3, 'productId':1, 'productName':'Mouse','total':500 },
-                //{ 'sl': 4, 'productId':1, 'productName':'Mouse','total':500 },
-                //{ 'sl': 5, 'productId':1, 'productName':'Mouse','total':500 },
-                //{ 'sl': 6, 'productId':1, 'productName':'Mouse','total':500 }
-            ];
 
-            ProductAutocomplet();
-            var tblProductList = $('#tblProductList').dataTable({
-                data: dtProductList,
-                columns: [
-                    { 'data': 'sl' },
-                    { 'data': 'productid' },
-                    { 'data': 'productName' },
-                    { 'data': 'total' },
-                    {
-                        data: 'sl',
-                        render: function(data, type, row) {
-                            return '<a href="Accounts/Home/Details/' + row.sl + '" target="_blank">' + row.sl + '</a>';
-                        },
-                    }
+            editor = new $.fn.dataTable.Editor({
+                table: "#tblIngredientList",
+                fields: [{
+                    label: "First name:",
+                    name: "first_name"
+                }, {
+                    label: "Last name:",
+                    name: "last_name"
+                }, {
+                    label: "Position:",
+                    name: "position"
+                }, {
+                    label: "Office:",
+                    name: "office"
+                }, {
+                    label: "Extension:",
+                    name: "extn"
+                }, {
+                    label: "Start date:",
+                    name: "start_date",
+                    type: "datetime"
+                }, {
+                    label: "Salary:",
+                    name: "salary"
+                }
                 ]
             });
 
-            $('#btnAddProductInList').click(() => { 
+            var dtProductList = [];
+            var dtIngredientList = [];
+
+            ProductAutocomplet();
+
+
+            var tblProductList = buildProductTable(dtProductList);
+            var tblIngredientList = buildIngredientTable(dtIngredientList);
+
+            $('#btnAddProductInList').click(() => {
                 var sl = dtProductList.length;
                 var productId = $('#hdnProductId').val();
                 var productName = $('#txtProductName').val();
@@ -127,11 +142,72 @@
                 $('#hdnProductId').val('');
                 $('#txtProductName').val('');
 
-                tblProductList.ajax.reload();
+                tblProductList = buildProductTable(dtProductList);
+
+                $.ajax({
+                    url: '@Url.Action("GetAllIngredientsById","Ingredients")',
+                    type: 'GET',
+                    data: { productId: productId }
+                }).done(response => {
+                    $.each(response, (index, element) => {
+                        dtIngredientList.push(element);
+                    });
+
+                    tblIngredientList = buildIngredientTable(dtIngredientList);
+                }).fail(err => { });
+
+
+
             });
         });
 
+        function buildProductTable(dtProductList) {
+            var tblProductList = $('#tblProductList').dataTable({
+                data: dtProductList,
+                columns: [
+                    { 'data': 'sl' },
+                    { 'data': 'productId' },
+                    { 'data': 'productName' },
+                    { 'data': 'total' },
+                    {
+                        data: 'sl',
+                        render: function(data, type, row) {
+                            return '<a href="Accounts/Home/Details/' + row.sl + '" target="_blank">' + row.sl + '</a>';
+                        },
+                    }
+                ],
+                "bDestroy": true,
+                "fnDrawCallback": function(oSettings) {
 
+                }
+            });
+            return tblProductList;
+        }
+
+        function buildIngredientTable(dtIngredientList) {
+            var tblIngredientList = $('#tblIngredientList').dataTable({
+                data: dtIngredientList,
+                columns: [
+                    { 'data': 'sl' },
+                    { 'data': 'productId' },
+                    { 'data': 'productName' },
+                    { 'data': 'ingredientId' },
+                    { 'data': 'ingredientName' },
+                    { 'data': 'totalIngredient' },
+                    {
+                        data: 'sl',
+                        render: function(data, type, row) {
+                            return '<a href="Accounts/Home/Details/' + row.sl + '" target="_blank">' + row.sl + '</a>';
+                        },
+                    }
+                ],
+                "bDestroy": true,
+                "fnDrawCallback": function(oSettings) {
+
+                }
+            });
+            return tblIngredientList;
+        }
 
         function ProductAutocomplet() {
 

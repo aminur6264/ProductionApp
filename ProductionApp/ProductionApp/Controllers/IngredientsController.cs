@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProductionApp.BLL;
 using ProductionApp.Models;
+using ProductionApp.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -33,6 +34,12 @@ namespace ProductionApp.Controllers
                 Id = x.Id
             }).ToList();
             return Json(result);
+        }
+
+        public IActionResult GetAllIngredientsById(int productid)
+        {
+            List<IngredientListVM> ingredients = new IngredientBLL().GetIngredientsByPdorductid(productid);
+            return Json(ingredients);
         }
 
     }
