@@ -1,0 +1,126 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_BlankLayout.cshtml";
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+<link href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.dataTables.min.css" rel="stylesheet" />
+<link href="https://cdn.datatables.net/select/1.4.0/css/select.dataTables.min.css" rel="stylesheet" />
+<link href="https://cdn.datatables.net/datetime/1.1.2/css/dataTables.dateTime.min.css" rel="stylesheet" />
+<link href="https://editor.datatables.net/extensions/Editor/css/editor.dataTables.min.css" rel="stylesheet" />
+
+<table id="example" class="display" cellspacing="0" width="100%">
+    <thead>
+        <tr>
+            <th></th>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>Position</th>
+            <th>Office</th>
+            <th width="18%">Start date</th>
+            <th>Salary</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+</table>
+
+
+
+
+
+
+
+@section scripts{
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/select/1.4.0/js/dataTables.select.min.js"></script>
+    <script src="https://cdn.datatables.net/datetime/1.1.2/js/dataTables.dateTime.min.js"></script>
+    <script src="https://editor.datatables.net/extensions/Editor/js/dataTables.editor.min.js"></script>
+    <script>
+        var editor;
+        $(document).ready(function() {
+            editor = new $.fn.dataTable.Editor({
+                ajax: "../php/staff.php",
+                table: "#example",
+                fields: [{
+                    label: "First name:",
+                    name: "first_name"
+                }, {
+                    label: "Last name:",
+                    name: "last_name"
+                }, {
+                    label: "Position:",
+                    name: "position"
+                }, {
+                    label: "Office:",
+                    name: "office"
+                }, {
+                    label: "Extension:",
+                    name: "extn"
+                }, {
+                    label: "Start date:",
+                    name: "start_date",
+                    type: "datetime"
+                }, {
+                    label: "Salary:",
+                    name: "salary"
+                }]
+            });
+
+
+
+
+        });
+
+
+
+
+        function WaitForMe(div, message) {
+            $(div).waitMe({
+                effect: 'win8',
+                text: message,
+                bg: 'rgba(255,255,255,0.7)',
+                color: '#000000',
+                maxSize: 30,
+                waitTime: -1,
+                textPos: 'vertical',
+                fontSize: '',
+                source: '',
+                onClose: function() { }
+            })
+        }
+        function hideWaitForMe(div) {
+            $(div).waitMe("hide");
+        }
+    </script>
+}
+
